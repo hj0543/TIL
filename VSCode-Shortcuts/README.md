@@ -1,20 +1,55 @@
-## ⌨️ VS Code Shortcuts
 
-개발 생산성을 높여주는 VS Code 주요 단축키 목록입니다.
+### 1. 필수 및 제어 (General)
 
-| Category | Function | Windows / Linux | macOS |
-|:---:|:---|:---|:---|
-| **General** | 명령 팔레트 (Command Palette) | `Ctrl` + `Shift` + `P` | `Cmd` + `Shift` + `P` |
-| | 빠른 파일 열기 (Quick Open) | `Ctrl` + `P` | `Cmd` + `P` |
-| | 사이드바 토글 (Toggle Sidebar) | `Ctrl` + `B` | `Cmd` + `B` |
-| | 설정 열기 (Settings) | `Ctrl` + `,` | `Cmd` + `,` |
-| **Editing** | 주석 토글 (Toggle Comment) | `Ctrl` + `/` | `Cmd` + `/` |
-| | 줄 복사 (Copy Line Up/Down) | `Shift` + `Alt` + `↑` / `↓` | `Shift` + `Opt` + `↑` / `↓` |
-| | 줄 이동 (Move Line Up/Down) | `Alt` + `↑` / `↓` | `Opt` + `↑` / `↓` |
-| | 같은 단어 다중 선택 (Add Selection) | `Ctrl` + `D` | `Cmd` + `D` |
-| | 멀티 커서 (Multi-Cursor) | `Alt` + `Click` | `Opt` + `Click` |
-| | 코드 자동 정렬 (Format Document) | `Ctrl` + `K`, `F` | `Shift` + `Opt` + `F` |
-| **Navigation** | 정의로 이동 (Go to Definition) | `F12` | `F12` |
-| | 전체 검색 (Find in Files) | `Ctrl` + `Shift` + `F` | `Cmd` + `Shift` + `F` |
-| **Terminal** | 터미널 열기/닫기 (Toggle Terminal) | `Ctrl` + `` ` `` | `Ctrl` + `` ` `` |
-| | 새 터미널 생성 (New Terminal) | `Ctrl` + `Shift` + `` ` `` | `Ctrl` + `Shift` + `` ` `` |
+VS Code의 모든 기능을 다루는 키입니다. 특히 **명령 팔레트**는 꼭 기억해야 합니다.
+
+| 기능 | Windows / Linux | macOS | 설명 |
+| --- | --- | --- | --- |
+| **명령 팔레트** | `Ctrl` + `Shift` + `P` | `Cmd` + `Shift` + `P` | 테마 변경, 설정 열기 등 모든 명령어 실행 |
+| **파일 빠르게 열기** | `Ctrl` + `P` | `Cmd` + `P` | 파일명으로 검색하여 즉시 이동 |
+| **사이드바 토글** | `Ctrl` + `B` | `Cmd` + `B` | 왼쪽 탐색기(파일 목록) 숨기기/보이기 |
+| **설정 열기** | `Ctrl` + `,` | `Cmd` + `,` | 사용자 설정 화면 열기 |
+
+### 2. 멀티 커서 및 선택 (Multi-Cursor)
+
+VS Code의 **가장 강력한 기능** 중 하나입니다. 여러 곳을 동시에 수정할 때 사용합니다.
+
+| 기능 | Windows / Linux | macOS | 설명 |
+| --- | --- | --- | --- |
+| **다음 단어 다중 선택** | `Ctrl` + `D` | `Cmd` + `D` | 현재 선택한 단어와 같은 다음 단어를 추가로 선택 |
+| **모든 단어 다중 선택** | `Ctrl` + `Shift` + `L` | `Cmd` + `Shift` + `L` | 현재 단어와 같은 **모든** 단어를 한 번에 선택 |
+| **커서 추가 (클릭)** | `Alt` + `Click` | `Opt` + `Click` | 원하는 위치에 커서를 계속 추가 |
+| **커서 위/아래 추가** | `Ctrl` + `Alt` + `↑/↓` | `Cmd` + `Opt` + `↑/↓` | 현재 커서 위/아래 줄에 커서 추가 |
+
+### 3. 코드 편집 (Editing)
+
+줄 단위 편집이 매우 직관적입니다.
+
+| 기능 | Windows / Linux | macOS | 설명 |
+| --- | --- | --- | --- |
+| **줄 이동** | `Alt` + `↑/↓` | `Opt` + `↑/↓` | 현재 줄을 위/아래로 이동 |
+| **줄 복사** | `Shift` + `Alt` + `↑/↓` | `Shift` + `Opt` + `↑/↓` | 현재 줄을 위/아래로 복사 |
+| **주석 토글** | `Ctrl` + `/` | `Cmd` + `/` | 한 줄 주석 설정/해제 |
+| **문서 포맷팅** | `Shift` + `Alt` + `F` | `Shift` + `Opt` + `F` | 코드 자동 정렬 (Prettier 등 사용 시) |
+| **정의로 이동** | `F12` | `F12` | 변수/함수의 정의부로 이동 |
+
+### 4. 터미널 및 창 관리 (Terminal & View)
+
+내장 터미널을 자주 사용할 때 유용합니다.
+
+| 기능 | Windows / Linux | macOS | 설명 |
+| --- | --- | --- | --- |
+| **터미널 열기/닫기** | `Ctrl` + ``` (백틱) | `Ctrl` + ``` (백틱) | 하단 터미널 패널 토글 |
+| **새 터미널 열기** | `Ctrl` + `Shift` + ``` | `Ctrl` + `Shift` + ``` | 새로운 터미널 탭 생성 |
+| **에디터 나누기** | `Ctrl` + `\` | `Cmd` + `\` | 화면을 좌우로 분할하여 보기 |
+| **탭 닫기** | `Ctrl` + `W` | `Cmd` + `W` | 현재 열린 파일 탭 닫기 |
+
+---
+
+### 💡 팁: 이전에 쓰던 툴 단축키 가져오기
+
+만약 인텔리제이(IntelliJ) 단축키가 손에 익으셨다면, 억지로 VS Code 단축키를 외우지 않으셔도 됩니다.
+
+1. **확장 프로그램(Extension)** 탭 클릭 (`Ctrl` + `Shift` + `X`)
+2. **"IntelliJ Keymap"** 검색 및 설치
+3. VS Code에서도 인텔리제이 단축키를 그대로 사용할 수 있습니다.
