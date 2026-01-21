@@ -101,6 +101,7 @@ greet(name = 'Dave', age = 35) # 안녕하세요, Dave님! 35살이시군요.
 greet(age = 35, name = 'Dave') # 안녕하세요, Dave님! 35살이시군요.     
 
 greet(age = 35, 'Dave') # positional argument follows keyword argument.
+# error -> 객관식으로 나올 수 있다.
 ```
 
 
@@ -112,6 +113,7 @@ greet(age = 35, 'Dave') # positional argument follows keyword argument.
 ```python
 def calculate_sum(*args):
     print(args) # (1, 100, 5000, 30)
+    print(args[0]) # 1
     print(type(args)) # <class 'tuple'>
 
 calculate_sum(1, 100, 5000, 30)
@@ -125,9 +127,9 @@ calculate_sum(1, 100, 5000, 30)
 > 매개변수 앞에 **를 붙이며, 전달된 인자들은 dictionary로 묶여 처리
 ```python
 def print_info(**kwargs): # kwargs 이름 변경가능 -> 매개변수이기 때문에
-    print(kwarags)
+    print(kwargs)
 
-print_info(name='Eve'. age=30) # {'name': 'Eve', 'age':30}
+print_info(name='Eve'. age=30) # {'name': 'Eve', 'age':30} # dict의 key:value
 ```
 #### 2) 왜 위치 인자가 키워드 인자보다 앞에 와야 할까?
 > 순서의 모호성 때문
@@ -397,8 +399,8 @@ add(*numbers)  # add(10, 20)과 동일하게 동작
 
 **`*` (Asterisk): 리스트/튜플**
 
-* **패킹:** 여러 개의 인자를 **튜플**로 묶음 (`*args`)
-* **언패킹:** 리스트나 튜플의 요소를 풀어서 전달
+* **패킹:** 여러 개의 인자를 **튜플**로 묶음 (`*args`) -> 함수 내부에서 쓸 때
+* **언패킹:** 리스트나 튜플의 요소를 풀어서 전달 -> 함수 외부에서 쓸 때
 
 **`**` (Double Asterisk): 딕셔너리**
 
