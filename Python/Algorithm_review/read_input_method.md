@@ -21,6 +21,19 @@ N = int(input())
 A = list(map(int, input().split()))
 ```
 
+## +a
+### 입력 예시
+
+```
+89, 90, 100
+```
+
+### 코드
+
+```python
+numbers = list(map(int, input().split(',')))
+```
+
 ---
 
 ## 2) 첫 줄에 `N`, 다음 `N줄`에 정수 1개씩(세로)
