@@ -1,150 +1,223 @@
 
-# 📝 실전 문제로 보는 2차원 배열 & 델타 탐색
+# 📂 실전 백준 풀이: 2차원 배열 & 델타 탐색
 
-## 1. 델타 탐색 활용: 이웃한 원소의 차이 합
+이 세 문제만 확실히 잡으면 IM 등급의 2차원 배열 문제는 두렵지 않다.
 
-2차원 배열 탐색의 가장 기본이 되는 문제 패턴이다. 상하좌우를 살펴야 한다.
+## 1. [Bronze 1] 2605번: 줄 세우기 (리스트 제어)
 
-### ❓ 문제
+2차원 배열로 넘어가기 전, **리스트의 인덱스 제어** 감각을 익히는 필수 문제. `insert` 함수를 얼마나 잘 쓰는가?
 
- 2차원 배열이 주어진다. 각 칸의 요소에 대해서, 그 요소와 **상하좌우에 있는 이웃한 요소와의 차이(절댓값)**를 구하고, 이 값들의 **총합**을 구하시오.
-(단, 벽(범위)을 벗어나는 이웃은 계산하지 않는다.)
+* **문제 링크**: [https://www.acmicpc.net/problem/2605](https://www.acmicpc.net/problem/2605)
+* **핵심**:
+* 학생들이 뽑은 번호표만큼 **앞으로** 간다.
+* `insert(인덱스, 값)`: 특정 위치에 값을 넣으면 뒤의 값들은 자동으로 밀려난다.
+* **삽입 위치 공식**: `전체 길이 - 뽑은 번호 - 1` (혹은 뒤에서부터 세기)
 
-### 💡 풀이 접근
 
-1. 이중 `for`문으로 모든 좌표 `(i, j)`를 순회한다.
-2. 각 좌표에서 `di`, `dj`를 이용해 4방향을 탐색한다.
-3. 새로운 좌표 `(ni, nj)`가 범위 내에 있는지 확인하고, 절댓값(`abs`) 차이를 누적한다.
 
-### 💻 코드
+### 💻 풀이 코드
 
 ```python
-def solve_neighbor_sum(arr):
-    N = len(arr) # 5
-    total_sum = 0
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+picks = list(map(int, input().split()))
+line = []
+
+for i in range(N):
+    # 학생 번호는 1번부터 시작
+    student_num = i + 1
+    pick = picks[i]
     
-    # 상, 하, 좌, 우 델타
-    di = [-1, 1, 0, 0]
-    dj = [0, 0, -1, 1]
+    # 1. 맨 뒤에 서는 경우 (번호표 0)
+    if pick == 0:
+        line.append(student_num)
+    # 2. 앞으로 가는 경우 (insert)
+    # 들어갈 위치 = 현재 줄 서있는 사람 수 - 뽑은 번호
+    else:
+        insert_idx = len(line) - pick
+        line.insert(insert_idx, student_num)
+
+print(*line)
+
+```
+
+---
+
+## 2. [Silver 5] 2563번: 색종이 (2차원 배열 채우기)
+
+**"겹치는 면적을 어떻게 구하지?"** 수학으로 풀면 망한다. 격자(Grid)에 그림을 그린다고 생각해야 한다.
+
+* **문제 링크**: [https://www.acmicpc.net/problem/2563](https://www.acmicpc.net/problem/2563)
+* **핵심**:
+* 100x100 `0`으로 채워진 도화지(2차원 배열)를 만든다.
+* 색종이가 붙는 위치를 `1`로 **덮어쓴다(Marking)**.
+* 마지막에 `1`의 개수를 모두 더한다. (`sum`)
+
+
+
+### 💻 풀이 코드
+
+```python
+import sys
+input = sys.stdin.readline
+
+# 1. 도화지 초기화 (문제 조건: 100x100)
+paper = [[0] * 100 for _ in range(100)]
+N = int(input())
+
+for _ in range(N):
+    # 왼쪽 벽 거리(x), 아래쪽 벽 거리(y)
+    x, y = map(int, input().split())
     
-    for i in range(N):
-        for j in range(N):
-            # 현재 위치: arr[i][j]
-            # 4방향 탐색
-            for k in range(4):
-                ni = i + di[k]
-                nj = j + dj[k]
+    # 2. 색종이 크기(10x10)만큼 1로 채우기
+    for i in range(x, x + 10):
+        for j in range(y, y + 10):
+            # 범위 체크는 문제 조건상 색종이가 도화지 밖으로 안 나가므로 생략 가능
+            paper[i][j] = 1
+
+# 3. 1의 개수 세기 (면적)
+area = 0
+for row in paper:
+    area += sum(row)
+
+print(area)
+
+```
+
+---
+
+## 3. [Silver 1] 2615번: 오목 (델타 탐색의 끝판왕)
+
+IM 시험에서 가장 자주 나오는 **"연속된 K개의 패턴 찾기"** 유형이다. 델타 탐색을 제대로 이해했는지 확인하는 리트머스 시험지.
+
+* **문제 링크**: [https://www.acmicpc.net/problem/2615](https://www.acmicpc.net/problem/2615)
+* **핵심**:
+* **4방향 탐색**: `우`, `하`, `우하향`, `우상향` (반대 방향은 볼 필요 없음, 중복 방지).
+* **육목(6개) 체크**: 5개가 연속되었을 때, **그 앞쪽**이나 **그 뒤쪽**에 같은 돌이 있으면 5목이 아니다.
+* **승리 좌표 출력**: "가장 왼쪽, 가장 위쪽" 알을 출력해야 하므로 탐색 순서가 중요하다.
+
+
+
+### 💻 풀이 코드
+
+```python
+import sys
+input = sys.stdin.readline
+
+# 19x19 바둑판
+board = [list(map(int, input().split())) for _ in range(19)]
+
+# 방향: 우, 하, 우하, 우상 (가장 왼쪽 알을 기준으로 잡기 위해 오른쪽 방향 위주로 설정)
+dr = [0, 1, 1, -1]
+dc = [1, 0, 1, 1]
+
+def solve():
+    # 1. 모든 좌표 순회
+    for r in range(19):
+        for c in range(19):
+            if board[r][c] != 0: # 돌이 있다면
+                curr_color = board[r][c]
                 
-                # [핵심] 벽 넘어가면 무시 (인덱스 유효성 검사)
-                if 0 <= ni < N and 0 <= nj < N:
-                    diff = abs(arr[i][j] - arr[ni][nj])
-                    total_sum += diff
+                # 2. 4방향 탐색
+                for k in range(4):
+                    cnt = 1
                     
-    return total_sum
+                    # 2-1. 해당 방향으로 계속 가보기
+                    nr, nc = r + dr[k], c + dc[k]
+                    while 0 <= nr < 19 and 0 <= nc < 19 and board[nr][nc] == curr_color:
+                        cnt += 1
+                        nr += dr[k]
+                        nc += dc[k]
+                    
+                    # 3. 정확히 5개인가?
+                    if cnt == 5:
+                        # [중요] 육목 체크: 시작점의 '반대 방향'에 같은 색 돌이 있는지 확인
+                        # 반대 방향 좌표
+                        prev_r = r - dr[k]
+                        prev_c = c - dc[k]
+                        
+                        # 반대 방향이 범위 안이고, 같은 색이면 -> 6목 이상임 (무효)
+                        if 0 <= prev_r < 19 and 0 <= prev_c < 19 and board[prev_r][prev_c] == curr_color:
+                            continue
+                        
+                        # 여기까지 통과했으면 진짜 승리
+                        print(curr_color)
+                        print(r + 1, c + 1) # 문제 좌표는 1부터 시작
+                        return
 
-# 예시 데이터 (랜덤 5x5)
-data = [
-    [1, 2, 3, 4, 5],
-    [5, 4, 3, 2, 1],
-    [1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2],
-    [3, 3, 3, 3, 3]
-]
+    # 승부 안 남
+    print(0)
 
-print(f"차이의 총합: {solve_neighbor_sum(data)}")
+solve()
 
 ```
 
 ---
 
-## 2. 배열 순회 응용: 대각선의 합 구하기
+## 4. [Silver 3] 1913번: 달팽이 (시뮬레이션 패턴)
 
-인덱스의 규칙성을 이용하는 문제이다.
+2차원 배열을 뱅글뱅글 도는 **토네이도/달팽이** 유형의 기초. **규칙성**을 코드로 옮기는 능력을 본다.
 
-### ❓ 문제
+* **문제 링크**: [https://www.acmicpc.net/problem/1913](https://www.acmicpc.net/problem/1913)
+* **핵심**:
+* 중앙에서 시작해서 밖으로 나가는 방식.
+* **이동 규칙**: `1, 1, 2, 2, 3, 3 ...` (같은 거리로 방향을 2번 바꿀 때마다 이동 거리가 1 늘어난다).
+* 방향 순서: `상 -> 우 -> 하 -> 좌` (문제 좌표계에 따라 `dr, dc` 설정 주의).
 
- 정방형 배열에서 **좌측 상단  우측 하단 대각선**과 **우측 상단  좌측 하단 대각선** 위에 있는 요소들의 합을 구하시오. (단, 정중앙에 있는 요소가 중복될 경우 한 번만 더해야 한다.)
 
-### 💡 풀이 접근
 
-1. **정방향 대각선**: 행 인덱스와 열 인덱스가 같다. (`i == j`)
-2. **역방향 대각선**: 행 인덱스와 열 인덱스의 합이 일정하다. (`i + j == N - 1`)
-3. 이 홀수라면 정중앙(`N//2, N//2`)이 겹치므로 주의해야 한다.
-
-### 💻 코드
+### 💻 풀이 코드
 
 ```python
-def diagonal_sum(arr):
-    N = len(arr)
-    total = 0
-    
-    for i in range(N):
-        # 1. 정방향 대각선 (0,0), (1,1)...
-        total += arr[i][i]
-        
-        # 2. 역방향 대각선 (0,4), (1,3)...
-        # 단, 중앙 요소가 중복되지 않도록 조건 추가
-        # (i != N - 1 - i)는 중앙이 아닐 때만 더하라는 뜻
-        if i != N - 1 - i:
-            total += arr[i][N - 1 - i]
-            
-    return total
+import sys
+input = sys.stdin.readline
 
-arr_example = [
-    [1, 0, 0, 0, 1],
-    [0, 2, 0, 2, 0],
-    [0, 0, 3, 0, 0],
-    [0, 2, 0, 2, 0],
-    [1, 0, 0, 0, 1]
-]
-print(f"대각선 합: {diagonal_sum(arr_example)}") # 1+1+2+2+3+2+2+1+1 = 15
+N = int(input())
+target = int(input())
+
+grid = [[0] * N for _ in range(N)]
+
+# 중앙 시작점
+r, c = N // 2, N // 2
+grid[r][c] = 1
+
+# 방향: 상 우 하 좌 (문제 출력 예시 보고 맞춤)
+dr = [-1, 0, 1, 0]
+dc = [0, 1, 0, -1]
+
+num = 2
+length = 1   # 이동 거리
+d_idx = 0    # 방향 인덱스
+
+ans_r, ans_c = N // 2 + 1, N // 2 + 1 # target이 1일 때 대비
+
+while num <= N * N:
+    if r == 0 and c == 0: break
+    
+    # 같은 길이로 2번 이동 (방향 2번)
+    for _ in range(2):
+        for _ in range(length):
+            r += dr[d_idx]
+            c += dc[d_idx]
+            
+            if num > N * N: break
+            
+            grid[r][c] = num
+            
+            if num == target:
+                ans_r, ans_c = r + 1, c + 1
+            
+            num += 1
+            
+        d_idx = (d_idx + 1) % 4
+        
+    length += 1
+
+# 출력
+for row in grid:
+    print(*row)
+print(ans_r, ans_c)
 
 ```
-
----
-
-## 3. 부분집합 응용: 부분집합의 합이 0이 되는 경우
-
-비트 연산자를 활용한 부분집합 생성의 대표 예제이다.
-
-### ❓ 문제
-
-10개의 정수를 입력받아, 이 중 **공집합이 아닌 부분집합의 합이 0이 되는 경우**가 존재하는지 확인하시오. (True/False 출력)
-
-### 💡 풀이 접근
-
-1. 원소의 개수 에 대해 총 개의 부분집합이 존재한다. (`1 << N`)
-2. `0`번 부분집합(공집합)을 제외하고 `1`부터 순회한다.
-3. 비트 연산자 `&`를 이용해 포함된 원소를 골라내 합을 구한다.
-
-### 💻 코드
-
-```python
-def check_zero_sum(numbers):
-    N = len(numbers)
-    
-    # 1. 모든 부분집합 생성 (1부터 시작해서 공집합 제외)
-    for i in range(1, 1 << N):
-        current_sum = 0
-        
-        # 2. i번째 부분집합에 포함된 원소 확인
-        for j in range(N):
-            if i & (1 << j): # j번째 비트가 1이라면
-                current_sum += numbers[j]
-        
-        # 3. 합 검사
-        if current_sum == 0:
-            return True # 0이 되는 경우 발견!
-            
-    return False # 끝까지 못 찾음
-
-data = [-7, -3, -2, 5, 8] 
-# 부분집합 {-3, -2, 5}의 합이 0이 됨
-print(f"합이 0인 부분집합 존재? {check_zero_sum(data)}") # True
-
-```
-
----
-
-✅ **다음 단계**
-2차원 배열과 완전 검색까지 정리가 끝났습니다. 이제 알고리즘의 효율성을 비약적으로 높여주는 **검색(Search)** 파트로 넘어가서 **이진 검색(Binary Search)**과 **선택 정렬(Selection Sort)**에 대해 정리해 보자.
