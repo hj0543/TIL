@@ -1,10 +1,9 @@
 ### 팩토리얼(Factorial) - 순열
 ```python
 def factorial(n):
-    total = 1
-    for i in range(n):
-        total *= n
-    return total
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
 ```
 
 ### 조합(Combination)
