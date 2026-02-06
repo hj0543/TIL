@@ -1,136 +1,130 @@
 
-# 📝 실전 문제로 보는 검색과 정렬
+# 📝 실전 백준 문제로 보는 검색과 정렬
 
-## 1. 이진 검색 활용: 책 페이지 찾기
+## 1. 이진 검색 기초: [Silver 4] 수 찾기 (1920번)
 
-이진 검색의 핵심인 **"범위를 반으로 줄여나가는 과정"**을 이해하기 가장 좋은 예제이다.
+이진 검색의 가장 교과서적인 문제입니다. `N`개의 데이터 안에 특정 `target`이 존재하는지 빠르게 확인해야 합니다.
 
-### ❓ 문제
-
-책의 전체 페이지 수가 `N`쪽이다. 우리가 찾고자 하는 페이지가 `P`쪽일 때, 이진 검색으로 이 페이지를 찾으려면 **몇 번 만에** 찾을 수 있는지 구하시오.
-(단, 검색 구간의 시작을 `start`, 끝을 `end`라 할 때, 중간 페이지 `middle = int((start + end) / 2)`로 계산한다.)
-
-### 💡 풀이 접근
-
-1. 초기 범위: `start = 1`, `end = N`
-2. `middle` 계산 후 `target`과 비교한다.
-* `target == middle`: 찾음 (종료)
-* `target < middle`: 왼쪽 구간 선택  `end = middle` (또는 `middle - 1`)
-* `target > middle`: 오른쪽 구간 선택  `start = middle` (또는 `middle + 1`)
-* *(문제의 조건에 따라 범위 갱신 방식이 조금씩 다를 수 있으나, 보통 `middle-1`, `middle+1`을 사용한다.)*
+* **문제 링크**: [https://www.acmicpc.net/problem/1920](https://www.acmicpc.net/problem/1920)
+* **핵심 포인트**:
+* 데이터의 개수 `N`이 최대 10만, 탐색할 수 `M`이 최대 10만입니다.
+* 단순 순차 탐색()을 하면 시간 초과가 납니다.
+* 반드시 **정렬(`sort`) 후 이진 검색()**을 사용해야 합니다.
 
 
 
-### 💻 코드
+### 💻 풀이 코드
 
 ```python
-def binary_search_count(N, target):
-    start = 1
-    end = N
-    count = 0 # 탐색 횟수
+import sys
+input = sys.stdin.readline
+
+def binary_search(arr, target):
+    start = 0
+    end = len(arr) - 1
     
     while start <= end:
-        middle = (start + end) // 2
-        count += 1
+        mid = (start + end) // 2
         
-        if middle == target: # 찾았다!
-            return count
-        elif middle > target: # 찾는 쪽이 더 작으면 왼쪽으로
-            end = middle - 1
-        else: # 찾는 쪽이 더 크면 오른쪽으로
-            start = middle + 1
+        if arr[mid] == target:
+            return True
+        elif arr[mid] > target: # 타겟이 더 작으므로 왼쪽 탐색
+            end = mid - 1
+        else: # 타겟이 더 크므로 오른쪽 탐색
+            start = mid + 1
             
-    return -1 # 못 찾음
+    return False
 
-# 전체 400쪽, 목표 300쪽
-total_page = 400
-target_page = 300
-attempts = binary_search_count(total_page, target_page)
+# 1. 입력 및 정렬
+N = int(input())
+# 이진 검색의 필수 전제조건: 정렬!
+A = list(map(int, input().split()))
+A.sort() 
 
-print(f"탐색 횟수: {attempts}번")
+M = int(input())
+targets = list(map(int, input().split()))
+
+# 2. 각 타겟에 대해 이진 검색 수행
+for t in targets:
+    if binary_search(A, t):
+        print(1)
+    else:
+        print(0)
 
 ```
 
 ---
 
-## 2. 선택 정렬 활용: 오름차순 정렬 과정
+## 2. 정렬의 응용: [Silver 5] 소트인사이드 (1427번)
 
-선택 정렬은 **"가장 작은 것을 골라 맨 앞으로 보낸다"**는 단순한 논리를 반복한다.
+선택 정렬 로직을 이해하고 있다면 쉽게 풀 수 있는 문제입니다. (물론 파이썬 내장 함수가 강력하지만, 정렬 원리를 복습하기 좋습니다.)
 
-### ❓ 문제
+* **문제 링크**: [https://www.acmicpc.net/problem/1427](https://www.acmicpc.net/problem/1427)
+* **핵심 포인트**:
+* 숫자의 각 자릿수를 분리하여 **내림차순**으로 정렬해야 합니다.
+* 선택 정렬을 사용한다면 `max_idx`를 찾아 맨 앞과 교환하는 방식을 씁니다.
 
-다음 리스트를 선택 정렬을 사용하여 오름차순으로 정렬하시오. 각 단계(Pass)마다 리스트가 어떻게 변하는지 과정을 확인하시오.
-`data = [64, 25, 12, 22, 11]`
 
-### 💡 풀이 접근
 
-1. **Pass 1**: 전체 중 최솟값(`11`)을 찾아 맨 앞(`64`)과 교환한다. `[11, 25, 12, 22, 64]`
-2. **Pass 2**: 두 번째 칸부터 끝까지 중 최솟값(`12`)을 찾아 두 번째(`25`)와 교환한다. `[11, 12, 25, 22, 64]`
-3. 이 과정을 `N-1`번 반복한다.
-
-### 💻 코드
+### 💻 풀이 코드 (선택 정렬 구현)
 
 ```python
-def selection_sort_trace(arr):
-    N = len(arr)
+import sys
+input = sys.stdin.readline
+
+# 문자열로 받아서 리스트로 변환
+arr = list(map(int, list(input().strip())))
+N = len(arr)
+
+# 선택 정렬 (내림차순)
+for i in range(N - 1):
+    max_idx = i # 최댓값 위치 찾기
     
-    for i in range(N - 1): # 마지막 하나는 자동 정렬되므로 N-1번만 수행
-        min_idx = i # 기준 위치를 최솟값 인덱스로 가정
-        
-        # i+1부터 끝까지 훑으면서 진짜 최솟값 찾기
-        for j in range(i + 1, N):
-            if arr[min_idx] > arr[j]:
-                min_idx = j
-        
-        # 값 교환 (Swap)
-        arr[i], arr[min_idx] = arr[min_idx], arr[i]
-        
-        # 과정 출력
-        print(f"{i+1}단계: {arr}")
+    for j in range(i + 1, N):
+        if arr[j] > arr[max_idx]: # 더 큰 값 발견
+            max_idx = j
+            
+    # Swap (교환)
+    arr[i], arr[max_idx] = arr[max_idx], arr[i]
 
-data = [64, 25, 12, 22, 11]
-selection_sort_trace(data)
-
-# 출력 결과
-# 1단계: [11, 25, 12, 22, 64] -> 11이 맨 앞으로 옴
-# 2단계: [11, 12, 25, 22, 64] -> 12가 두 번째로 옴
-# 3단계: [11, 12, 22, 25, 64] -> 22가 세 번째로 옴
-# 4단계: [11, 12, 22, 25, 64] -> 25가 네 번째로 옴 (정렬 완료)
+# 결과 출력 (리스트 -> 문자열)
+print(''.join(map(str, arr)))
 
 ```
 
 ---
 
-## 3. 셀렉션 알고리즘: k번째로 작은 수 찾기
+## 3. 정렬 + 좌표 압축(순위 찾기): [Silver 2] 좌표 압축 (18870번)
 
-선택 정렬을 응용하여 전체를 다 정렬하지 않고도 원하는 순위의 값을 찾을 수 있다.
+"k번째로 작은 수" 개념을 확장하여, **"나보다 작은 수가 몇 개인지"**를 찾는 문제입니다. 정렬과 이진 검색(또는 딕셔너리)을 결합해야 합니다.
 
-### ❓ 문제
+* **문제 링크**: [https://www.acmicpc.net/problem/18870](https://www.acmicpc.net/problem/18870)
+* **핵심 포인트**:
+* 중복된 수를 제거(`set`)하고 정렬하면, **인덱스가 곧 '나보다 작은 수의 개수'**가 됩니다.
+* 예: `[-10, -9, 2, 4]` 에서 `2`의 인덱스는 2이고, 이는 `2`보다 작은 수가 2개(`-10, -9`)라는 뜻입니다.
 
-주어진 리스트에서 **3번째로 작은 수**를 구하시오. (전체 정렬을 끝까지 수행할 필요 없음)
-`data = [9, 5, 3, 1, 7]`
 
-### 💻 코드
+
+### 💻 풀이 코드
 
 ```python
-def find_kth_small(arr, k):
-    # k번째까지만 정렬을 수행함 (시간 절약)
-    for i in range(k):
-        min_idx = i
-        for j in range(i + 1, len(arr)):
-            if arr[min_idx] > arr[j]:
-                min_idx = j
-        arr[i], arr[min_idx] = arr[min_idx], arr[i]
-        
-    return arr[k-1] # 인덱스는 0부터 시작하므로 k-1
+import sys
+input = sys.stdin.readline
 
-data = [9, 5, 3, 1, 7]
-k = 3
-result = find_kth_small(data, k)
-print(f"{k}번째로 작은 수: {result}") 
-# 1단계: [1, 5, 3, 9, 7]
-# 2단계: [1, 3, 5, 9, 7]
-# 3단계: [1, 3, 5, 9, 7] -> 3번째 값인 5 반환
+N = int(input())
+coords = list(map(int, input().split()))
+
+# 1. 중복 제거 및 정렬
+# sorted_coords[i] : i번째로 작은 수
+sorted_coords = sorted(list(set(coords)))
+
+# 2. 딕셔너리로 {숫자 : 순위(인덱스)} 매핑 생성
+# 리스트 탐색 시간(O(N))을 줄이기 위해 해시(O(1)) 사용
+rank_dic = {value : idx for idx, value in enumerate(sorted_coords)}
+
+# 3. 원본 좌표를 순위로 변환하여 출력
+for x in coords:
+    print(rank_dic[x], end=' ')
 
 ```
 
