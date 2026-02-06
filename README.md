@@ -9,7 +9,7 @@
 <br/>
 
 ## 📚 Main Tech Stack
-[![My Skills](https://skillicons.dev/icons?i=java,py&theme=light)](https://skillicons.dev) 
+[![My Skills](https://skillicons.dev/icons?i=py&theme=light)](https://skillicons.dev) 
 
 <br/>
 
