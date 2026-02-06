@@ -66,7 +66,44 @@ def binary_search(arr, target):
     return -1  # 찾는 값이 없을 때
 
 ```
+#### 개수구하기 (백준 10816)
+```python
+import sys
+input = sys.stdin.readline
 
+def lower_bound(arr, target):
+    start, end = 0, len(arr)
+    while start < end:
+        mid = (start + end) // 2
+        if arr[mid] < target:
+            start = mid + 1
+        else:
+            end = mid
+    return start
+
+def upper_bound(arr, target):
+    start, end = 0, len(arr)
+    while start < end:
+        mid = (start + end) // 2
+        if arr[mid] <= target:
+            start = mid + 1
+        else:
+            end = mid
+    return start
+
+N = int(input())
+finder = list(map(int, input().split()))
+find_range = sorted(finder)
+
+M = int(input())
+target = list(map(int, input().split()))
+result = [0] * M
+
+for i in range(M):
+    result[i] += upper_bound(find_range, target[i]) - lower_bound(find_range, target[i])
+
+print(*result)
+```
 ### 6. Python 꿀팁: `bisect` 라이브러리
 
 파이썬은 이분 탐색을 위한 표준 라이브러리를 제공한다. 직접 구현할 필요 없이 이걸 쓰면 매우 편하다.
