@@ -32,3 +32,12 @@ print(gcd(60, 48)) # 출력: 12
 ```
 
 ### 최소공배수
+```python
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def lcm(a, b):
+    return abs(a * b) // gcd(a, b)
+```
