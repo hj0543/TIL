@@ -68,9 +68,13 @@ temp = list(map(int, input().split()))
 
 for i in range(E):
     s, e = temp[2*i], temp[2*i+1] # 두 개씩 끊어서 읽기
+    # u, v = map(int, input().split()) -> 한 줄에 2개씩 들어올 때
     graph[s].append(e)
     graph[e].append(s) # 양방향 연결!
-
+    
+    # 그래프에 연결 정보 추가
+    graph[u].append(v)
+    graph[v].append(u) # 양방향일 경우만 추가
 # [중요 2] 방문 순서 정렬 (오름차순)
 # "번호가 작은 노드부터 방문하시오"라는 조건이 많음.
 # 입력 순서에 따라 방문 순서가 뒤죽박죽 되는 것을 방지.
